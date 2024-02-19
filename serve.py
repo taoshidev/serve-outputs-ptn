@@ -29,5 +29,5 @@ def get_predictions_data():
 
 if __name__ == '__main__':
 
-    path = "~/develop/time-series-prediction-subnet/validation/outputs/"
+    path = "~/time-series-prediction-subnet/validation/outputs/"
     app.run(host='0.0.0.0', port=80)
