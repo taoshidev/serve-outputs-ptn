@@ -31,7 +31,7 @@ def get_predictions_data():
 
 
 @app.route("/weights", methods=["GET"])
-def get_predictions_data():
+def get_weights_data():
 	predictions_json_path = os.path.abspath(
 		os.path.join(path, "weights/valiweights.json")
 	)
@@ -47,4 +47,4 @@ if __name__ == "__main__":
 	from waitress import serve
 
 	path = "time-series-prediction-subnet/validation/"
-	serve(app, host="0.0.0.0", port=48888)
+	serve(app, host="0.0.0.0", port=80)
