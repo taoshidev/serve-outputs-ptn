@@ -89,6 +89,26 @@ def get_unique_predictions_data():
 	return jsonify({"unique_predictions": [return_results_dict[i] for i in range(0, 100)]})
 
 
+@app.route("/latest-cmw", methods=["GET"])
+def get_latest_cmw():
+	directory = os.path.abspath(
+		os.path.join(path, "backups/")
+	)
+	# Get list of all files in the directory
+	files = os.listdir(directory)
+	# Filter out directories, leave only files
+	files = [os.path.join(directory, file) for file in files if os.path.isfile(os.path.join(directory, file))]
+	# Get the latest file based on creation time
+	latest_file = max(files, key=os.path.getctime)
+
+	if os.path.exists(latest_file):
+		with open(latest_file, "r") as file:
+			data = file.read()
+		return jsonify(data)
+	else:
+		return f"{latest_file} not found", 404
+
+
 if __name__ == "__main__":
 	path = "time-series-prediction-subnet/validation/"
 	serve(app, host="0.0.0.0", port=80)
