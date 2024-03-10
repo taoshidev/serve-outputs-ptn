@@ -6,7 +6,7 @@ from waitress import serve
 app = Flask(__name__)
 
 
-# Endpoint to read and serve JSON data from cmw.json
+# Endpoint to read and serve JSON data from outputs.json
 @app.route("/miner-positions", methods=["GET"])
 def get_cmw_data():
 	output_json_path = os.path.abspath(os.path.join(path, "outputs/output.json"))
