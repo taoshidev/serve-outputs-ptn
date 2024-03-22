@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import os
 import requests
+import json
 
 from waitress import serve
 
@@ -26,7 +27,7 @@ def get_file(f):
 	output_json_path = os.path.abspath(os.path.join(path, f))
 	if os.path.exists(output_json_path):
 		with open(output_json_path, "r") as file:
-			data = file.read()
+			data = json.load(file)
 		return data
 	else:
 		return None
