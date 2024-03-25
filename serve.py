@@ -1,3 +1,5 @@
+import sys
+
 from flask import Flask, jsonify, request
 import os
 import requests
@@ -64,7 +66,7 @@ def get_validator_checkpoint():
 	else:
 		print("api key received.")
 
-	f = "runnable/validator_checkpoint.json"
+	f = "../runnable/validator_checkpoint.json"
 	data = get_file(f)
 
 	if data is None:
@@ -112,5 +114,11 @@ def get_miner_copying():
 
 
 if __name__ == "__main__":
-	path = "~/proprietary-trading-network/validation/"
+	# sys.argv[0] is the script name itself
+	# Arguments start from sys.argv[1]
+	if len(sys.argv) > 1:
+		path = sys.argv[1]
+	else:
+		path = "../proprietary-trading-network/validation/"
+	print(path)
 	serve(app, host="127.0.0.1", port=48888)
