@@ -55,7 +55,7 @@ def get_miner_positions():
 
 # serve miner positions v2 now named validator checkpoint
 @app.route("/validator-checkpoint", methods=["GET"])
-def get_miner_positions():
+def get_validator_checkpoint():
 	api_key = get_api_key()
 
 	# Check if the API key is valid
