@@ -53,6 +53,26 @@ def get_miner_positions():
 		return jsonify(data)
 
 
+# serve miner positions v2 now named validator checkpoint
+@app.route("/validator-checkpoint", methods=["GET"])
+def get_miner_positions():
+	api_key = get_api_key()
+
+	# Check if the API key is valid
+	if api_key not in accessible_api_keys:
+		return jsonify({'error': 'Unauthorized access'}), 401
+	else:
+		print("api key received.")
+
+	f = "runnable/validator_checkpoint.json"
+	data = get_file(f)
+
+	if data is None:
+		return f"{f} not found", 404
+	else:
+		return jsonify(data)
+
+
 @app.route("/eliminations", methods=["GET"])
 def get_eliminations():
 	api_key = get_api_key()
