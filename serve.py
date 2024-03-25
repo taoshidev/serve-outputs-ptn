@@ -112,5 +112,5 @@ def get_miner_copying():
 
 
 if __name__ == "__main__":
-	path = "proprietary-trading-network/validation/"
-	serve(app, host="0.0.0.0", port=48888)
+	path = "~/proprietary-trading-network/validation/"
+	serve(app, host="127.0.0.1", port=48888)
