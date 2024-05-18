@@ -17,6 +17,12 @@ By default, the server binds to `127.0.0.1` which only allows local requests. To
 serve(app, host="0.0.0.0", port=48888)
 ```
 
+### Launching the server
+On your validator, clone this repo, make desired edits, and then run
+```bash
+pm2 start serve.py --name serve
+```
+
 ## Security Considerations
 ### Rate Limiting
 Consider implementing rate limiting using out of the box Flask extensions like `Flask-Limiter` or custom implementations to prevent abuse and ensure fair use of the API.
