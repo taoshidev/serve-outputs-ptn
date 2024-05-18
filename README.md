@@ -18,7 +18,7 @@ serve(app, host="0.0.0.0", port=48888)
 ```
 
 ### Launching the server
-On your validator, clone this repo, make desired edits, and then run
+On your validator, clone this repo in the same directory that the `proprietary-trading-network` repo is in, make desired edits, and then run
 ```bash
 pm2 start serve.py --name serve
 ```
