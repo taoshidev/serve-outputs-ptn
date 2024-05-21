@@ -62,7 +62,50 @@ def get_miner_positions():
         return f"{f} not found", 404
     else:
         return jsonify(data)
+    
+@app.route("/miner-positions/<minerid>", methods=["GET"])
+def get_miner_positions_unique(minerid):
+    api_key = get_api_key()
 
+    # Check if the API key is valid
+    if api_key not in accessible_api_keys:
+        return jsonify({'error': 'Unauthorized access'}), 401
+
+    f = "outputs/output.json"
+    data = get_file(f)
+
+    if data is None:
+        return f"{f} not found", 404
+
+    # Filter the data for the specified miner ID
+    filtered_data = data.get(minerid, None)
+
+    if filtered_data is None:
+        return jsonify({'error': 'Miner ID not found'}), 404
+
+    return jsonify(filtered_data)
+
+# Endpoint to read and serve JSON data from outputs.json
+@app.route("/miner-hotkeys", methods=["GET"])
+def get_miner_hotkeys():
+    api_key = get_api_key()
+
+    # Check if the API key is valid
+    if api_key not in accessible_api_keys:
+        return jsonify({'error': 'Unauthorized access'}), 401
+
+    f = "outputs/output.json"
+    data = get_file(f)
+
+    if data is None:
+        return f"{f} not found", 404
+
+    miner_hotkeys = list(data.keys())
+
+    if len(miner_hotkeys) == 0:
+        return f"{f} not found", 404
+    else:
+        return jsonify(miner_hotkeys)
 
 # serve miner positions v2 now named validator checkpoint
 @app.route("/validator-checkpoint", methods=["GET"])
@@ -80,6 +123,45 @@ def get_validator_checkpoint():
         return f"{f} not found", 404
     else:
         return jsonify(data)
+    
+# serve miner positions v2 now named validator checkpoint
+@app.route("/statistics", methods=["GET"])
+def get_validator_checkpoint_statistics():
+    api_key = get_api_key()
+
+    # Check if the API key is valid
+    if api_key not in accessible_api_keys:
+        return jsonify({'error': 'Unauthorized access'}), 401
+
+    f = "../runnable/minerstatistics.json"
+    data = get_file(f)
+
+    if data is None:
+        return f"{f} not found", 404
+    else:
+        return jsonify(data)
+    
+# serve miner positions v2 now named validator checkpoint
+@app.route("/statistics/<minerid>/", methods=["GET"])
+def get_validator_checkpoint_statistics_unique(minerid):
+    api_key = get_api_key()
+
+    # Check if the API key is valid
+    if api_key not in accessible_api_keys:
+        return jsonify({'error': 'Unauthorized access'}), 401
+
+    f = "../runnable/minerstatistics.json"
+    data = get_file(f)
+
+    if data is None:
+        return f"{f} not found", 404
+
+    data_summary: list = data.get("data", None)
+    for element in data_summary:
+        if element.get("hotkey", None) == minerid:
+            return jsonify(element)
+
+    return jsonify({'error': 'Miner ID not found'}), 404
 
 
 @app.route("/eliminations", methods=["GET"])
