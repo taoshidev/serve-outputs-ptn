@@ -1,6 +1,6 @@
 import sys
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 import os
 import time
 import json
@@ -25,15 +25,19 @@ def get_api_key():
     return api_key
 
 
-def get_file(f, attempts=3):
-    output_json_path = os.path.abspath(os.path.join(path, f))
-    if not os.path.exists(output_json_path):
+def get_file(f, attempts=3, binary=False):
+    file_path = os.path.abspath(os.path.join(path, f))
+    if not os.path.exists(file_path):
         return None
 
     for attempt_number in range(attempts):
         try:
-            with open(output_json_path, "r") as file:
-                data = json.load(file)
+            if binary:
+                with open(file_path, 'rb') as f:
+                    data = f.read()
+            else:
+                with open(file_path, "r") as file:
+                    data = json.load(file)
             return data
         except json.JSONDecodeError as e:
             if attempt_number == attempts - 1:
@@ -55,13 +59,32 @@ def get_miner_positions():
     if api_key not in accessible_api_keys:
         return jsonify({'error': 'Unauthorized access'}), 401
 
-    f = "outputs/output.json"
-    data = get_file(f)
+    # Get the 'tier' query parameter from the request
+    tier = request.args.get('tier')
+    is_gz_data = tier is not None
+
+    if is_gz_data:
+        # Validate the 'tier' parameter
+        if tier not in ['0', '30', '50', '100']:
+            return jsonify({'error': 'Invalid tier value. Allowed values are 0, 30, 50, or 100'}), 400
+
+        # Construct the relative path based on the specified tier
+        f = f"outputs/tiered_positions/{tier}/output.json.gz"
+    else:
+        # If 'tier' parameter is not provided, return the default output.json
+        f = "outputs/output.json"
+
+    # Attempt to retrieve the file
+    data = get_file(f, binary=is_gz_data)
 
     if data is None:
         return f"{f} not found", 404
-    else:
-        return jsonify(data)
+    if is_gz_data:
+        return Response(data, content_type='application/json', headers={
+            'Content-Encoding': 'gzip'
+        })
+    return jsonify(data)
+
     
 @app.route("/miner-positions/<minerid>", methods=["GET"])
 def get_miner_positions_unique(minerid):
