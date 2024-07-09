@@ -165,19 +165,25 @@ Schema:
 ```
  "eliminations": [
     {
-      "dd": 0.8977225405136061,
+      "dd": 0.0,
       "elimination_initiated_time_ms": 1711184954891,
       "hotkey": "5Dk2u35LRYEi9SC5cWamtzRkdXJJDLES7gABuey6cJ6t1ajK",
-      "reason": "MAX_TOTAL_DRAWDOWN"
+      "reason": "LIQUIDATED"
     },
     {
-      "dd": 0.890604775902768,
       "elimination_initiated_time_ms": 1711204151504,
       "hotkey": "5G1iDH2gvdAyrpUD4QfZXATvGEtstRBiXWieRDeaDPRfPEcU",
-      "reason": "MAX_TOTAL_DRAWDOWN"
+      "reason": "PLAGIARISM"
     },
     {
 ```
+As of writing, the only ways to be eliminated are:
+
+* Being liquidated (portfolio value goes to 0)
+* Plagiarizing another miner
+* Failing the challenge period
+
+More information can be found here: https://github.com/taoshidev/proprietary-trading-network/blob/main/docs/miner.md#miner
 
 ### Miner Copying
 
