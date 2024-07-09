@@ -39,9 +39,16 @@ Configure firewall rules to only allow traffic on necessary ports from trusted I
 
 @app.route("/miner-positions", methods=["GET"])
 
-This endpoint takes an optional parameter "tier" which can be one of the following values: ['0', '30', '50', '100']
+This endpoint retrieves the positions of all miners, optionally filtered by a specified data freshness tier. The tier parameter can be one of the following values: ['0', '30', '50', '100'].
 
-If tier is not provided, the returned payload is a raw json file in this format:
+Parameters:
+tier (optional): Specifies the data freshness tier.
+* 0: 100% of positions show data with a 24-hour delay.
+* 30: 30% of positions show real-time data, 70% show data with a 24-hour delay.
+* 50: 50% of positions show real-time data, 50% show data with a 24-hour delay.
+* 100: 100% of positions show real-time data (equivalent to not providing a tier).
+
+If no tier is provided, the response will be a raw JSON file with the following schema:
 
 ```
 {
@@ -90,16 +97,38 @@ If tier is not provided, the returned payload is a raw json file in this format:
             },
 ...
 ```
+
+
 Hotkeys are mapped to a data dict. The data dict contains positions which contain orders.
 
-If a tier is provided, the returned payload will be a gzipped json file of the above schema but with the following differences:
+### Explanation of Schema:
+* miner_hotkey: A unique identifier for a miner. This is the same as the Bittensor metagraph hotkey value.
+* all_time_returns: The miner's total return on investment across all positions over all time.
+* n_positions: The number of positions held by the miner.
+* percentage_profitable: The proportion of the miner's positions that have been profitable.
+* positions: A list of individual trading positions held by the miner.
+* average_entry_price: The average price at which the miner entered the position.
+* current_return: The current return on the position with no fees.
+* return_at_close: The return on the position at the time it was closed with all fees applied.
+* initial_entry_price: The price at which the position was first opened.
+* is_closed_position: Indicates if the position is closed.
+* miner_hotkey: Reiterates the miner's unique identifier.
+* net_leverage: The leverage applied to the position.
+* open_ms: The timestamp (in milliseconds) when the position was opened.
+* close_ms: The timestamp (in milliseconds) when the position was closed. 0 if not closed.
+* orders: A list of orders executed within the position.
+    * leverage: The leverage applied to the order.
+    * order_type: The type of order (e.g., SHORT, FLAT).
+    * order_uuid: A unique identifier for the order.
+    * price: The price at which the order was executed.
+    * price_sources: Used for debugging. Info about the sources used to determine the price.
+* processed_ms: The timestamp (in milliseconds) when the order was processed.
+* position_type: The current status of the position (e.g., FLAT, SHORT, LONG).
+* position_uuid: A unique identifier for the position.
+* trade_pair: Information about the trade pair (e.g., currency pair BTCUSD).
 
-* tier 100: 100% of posiitons show realtime data. Equivalent to the "tierless" json file.
-* tier 50: 50% of positions show relatime data, 50% of postiions are 24 hour lagged
-* tier 30: 30% of positions show realtime data, 70% of positions are 24 hour lagged
-* tier 0: 100% of positions are 24 hour lagged (equivalent to the Taoshi dashboard)
+If a tier is provided, the response will be a gzipped JSON file with the above schema but with data freshness adjusted according to the specified tier. This allows different pricing tiers for data sales and enables more bandwidth-efficient data transfers due to gzip compression.
 
-The tiers enable granularity of data freshness for different pricing tiers when selling data. It also enables a less bandwidth-intensive option for tranfering data thanks to gzip. 
 
 ### Single Miner Positions
 
