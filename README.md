@@ -2,14 +2,15 @@
 # Flask API Server for PTN Outputs
 
 ## Overview
-This Flask server is configured to serve the outputs of the [PTN repo (Bittensor subnet 8)](https://github.com/taoshidev/proprietary-trading-network/blob/main/docs/validator.md), which generates JSON files accessible via this API. The Flask code can easily be modified to serve outputs from any other Bittensor subnet.
+This Flask server is configured to serve the outputs of the [PTN repo (Bittensor subnet 8)](https://github.com/taoshidev/proprietary-trading-network/blob/main/docs/validator.md), which generates files accessible via this API. This is needed so that validators can provide PTN data to consumers. 
 
-## Security Warning
-The API uses a simple token-based authentication system. The default API key is set to "xxxx". **Change this default API key before deploying in a production environment to prevent unauthorized access.**
+The Flask code can easily be modified to serve outputs from any other Bittensor subnet.
+
 
 ## Configuration
 ### Changing the API Key
-To enhance the security of your API, change the default API key in the `accessible_api_keys` list in `serve.py` to a more secure key.
+The API uses a simple token-based authentication system. The default API key is set to "xxxx".
+Change the default API key in the `accessible_api_keys` list in `serve.py` to a more secure key before deploying in a production environment to prevent unauthorized access.
 
 ### Making Server Accessible
 By default, the server binds to `127.0.0.1` which only allows local requests. To allow access from any IP address, bind to `0.0.0.0`:
@@ -24,6 +25,8 @@ pm2 start serve.py --name serve
 ```
 
 ## Security Considerations
+If you are using the repo as a standalone solution that does not leverage the [Request Network](https://request.taoshi.io/), you will need to several factors in your custom implementation.
+
 ### Rate Limiting
 Consider implementing rate limiting using out of the box Flask extensions like `Flask-Limiter` or custom implementations to prevent abuse and ensure fair use of the API.
 
@@ -273,7 +276,5 @@ with open('validator_checkpoint.json', 'w') as f:
 
 
 ## Final Notes
-This Flask server setup provides a simple template for serving API requests. If not using the Request Network, ensure all security measures are in place before deploying to a live environment. 
 
-The Request Network is a Taoshi product which serves subnet data while handling security, rate limiting, data customization, and provide a polished customer-facing and validator setup UI.
-
+The [Request Network](https://request.taoshi.io/) is a Taoshi product which serves subnet data while handling security, rate limiting, data customization, and provide a polished customer-facing and validator setup UI. Running this repo is a pre-req to serving data on the Request Network. 
