@@ -112,16 +112,15 @@ Hotkeys are mapped to a data dict. The data dict contains positions which contai
 * return_at_close: The return on the position at the time it was closed with all fees applied.
 * initial_entry_price: The price at which the position was first opened.
 * is_closed_position: Indicates if the position is closed.
-* miner_hotkey: Reiterates the miner's unique identifier.
-* net_leverage: The leverage applied to the position.
+* net_leverage: The leverage currently used in the position. 0 if the position is closed.
 * open_ms: The timestamp (in milliseconds) when the position was opened.
 * close_ms: The timestamp (in milliseconds) when the position was closed. 0 if not closed.
 * orders: A list of orders executed within the position.
     * leverage: The leverage applied to the order.
-    * order_type: The type of order (e.g., SHORT, FLAT).
+    * order_type: The type of order (e.g., SHORT, LONG, FLAT).
     * order_uuid: A unique identifier for the order.
     * price: The price at which the order was executed.
-    * price_sources: Used for debugging. Info about the sources used to determine the price.
+    * price_sources: Used for debugging. Info about the sources used to determine the price. At the time of this writing the sources are Polygon and TwelveData.
 * processed_ms: The timestamp (in milliseconds) when the order was processed.
 * position_type: The current status of the position (e.g., FLAT, SHORT, LONG).
 * position_uuid: A unique identifier for the position.
