@@ -25,7 +25,7 @@ pm2 start serve.py --name serve
 ```
 
 ## Security Considerations
-If you are using the repo as a standalone solution that does not leverage the [Request Network](https://request.taoshi.io/), you will need to several factors in your custom implementation.
+If you are using the repo as a standalone solution that does not leverage the [Request Network](https://request.taoshi.io/), you will need to consider several factors in your custom implementation.
 
 ### Rate Limiting
 Consider implementing rate limiting using out of the box Flask extensions like `Flask-Limiter` or custom implementations to prevent abuse and ensure fair use of the API.
