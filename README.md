@@ -47,9 +47,9 @@ This endpoint retrieves the positions of all miners, optionally filtered by a sp
 Parameters:
 tier (optional): Specifies the data freshness tier.
 * 0: 100% of positions show data with a 24-hour delay.
-* 30: 30% of positions show real-time data, 70% show data with a 24-hour delay.
-* 50: 50% of positions show real-time data, 50% show data with a 24-hour delay.
-* 100: 100% of positions show real-time data (equivalent to not providing a tier).
+* 30: 30% of positions show real-time data, 70% show data with a 24-hour delay. (superset of tier 0)
+* 50: 50% of positions show real-time data, 50% show data with a 24-hour delay. (superset of tier 30)
+* 100: 100% of positions show real-time data. Equivalent to not providing a tier. (superset of tier 50)
 
 If no tier is provided, the response will be a raw JSON file with the following schema:
 
