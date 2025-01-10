@@ -188,7 +188,7 @@ def get_validator_checkpoint_statistics_unique(minerid):
     show_checkpoints = request.args.get("checkpoints", "true").lower()
 
     for element in data_summary:
-        if element.get("hotkey") == minerid:
+        if element.get("hotkey", None) == minerid:
             # If the user set checkpoints=false, remove them from this element
             if show_checkpoints == "false":
                 element.pop("checkpoints", None)
