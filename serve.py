@@ -151,37 +151,47 @@ def get_validator_checkpoint():
 @app.route("/statistics", methods=["GET"])
 def get_validator_checkpoint_statistics():
     api_key = get_api_key()
-
-    # Check if the API key is valid
     if api_key not in accessible_api_keys:
         return jsonify({'error': 'Unauthorized access'}), 401
 
     f = "../runnable/minerstatistics.json"
     data = get_file(f)
-
     if data is None:
         return f"{f} not found", 404
-    else:
-        return jsonify(data)
-    
-# serve miner positions v2 now named validator checkpoint
+
+    # Grab the optional "checkpoints" query param; default it to "true"
+    show_checkpoints = request.args.get("checkpoints", "true").lower()
+
+    # If checkpoints=false, remove the "checkpoints" key from each element in data
+    if show_checkpoints == "false":
+        for element in data.get("data", []):
+            element.pop("checkpoints", None)
+
+    return jsonify(data)
+
 @app.route("/statistics/<minerid>/", methods=["GET"])
 def get_validator_checkpoint_statistics_unique(minerid):
     api_key = get_api_key()
-
-    # Check if the API key is valid
     if api_key not in accessible_api_keys:
         return jsonify({'error': 'Unauthorized access'}), 401
 
     f = "../runnable/minerstatistics.json"
     data = get_file(f)
-
     if data is None:
         return f"{f} not found", 404
 
-    data_summary: list = data.get("data", None)
+    data_summary = data.get("data", [])
+    if not data_summary:
+        return jsonify({'error': 'No data found'}), 404
+
+    # Grab the optional "checkpoints" query param; default it to "true"
+    show_checkpoints = request.args.get("checkpoints", "true").lower()
+
     for element in data_summary:
         if element.get("hotkey", None) == minerid:
+            # If the user set checkpoints=false, remove them from this element
+            if show_checkpoints == "false":
+                element.pop("checkpoints", None)
             return jsonify(element)
 
     return jsonify({'error': 'Miner ID not found'}), 404
