@@ -274,7 +274,14 @@ with open('validator_checkpoint.json', 'w') as f:
 
 ```
 
+### Best practices when building trading logic
+Parse the processed time of the order and compare it to the current time to decide if the order is fresh. Rarely, orders can be delayed.
+Keep track of order uuids that have already been processed so that you can only process the newest orders.
+Use the tiered positions endpoint with the .gz payload for optimal response times.
+
 
 ## Final Notes
 
 The [Request Network](https://request.taoshi.io/) is a Taoshi product which serves subnet data while handling security, rate limiting, data customization, and provide a polished customer-facing and validator setup UI. Running this repo is a pre-req to serving data on the Request Network. 
+
+
